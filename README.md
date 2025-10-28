@@ -90,10 +90,12 @@ http://localhost:8000/docs
 ## API Endpoints
 Метод	Endpoint	    Описание
 ---------------------------------
-POST	/cities	        Добавить город
-GET	    /cities	        Получить все города
-GET	    /cities/{id}	Получить город по ID
-DELETE	/cities/{id}	Удалить город
-POST	/cities/nearest	Найти ближайшие города
-GET	    /health	        Проверка здоровья
-GET	    /stats	        Статистика хранилища
+| Метод   | Endpoint          | Описание |
+|---------|-------------------|----------|
+| POST    | `/cities`         | Добавить город |
+| GET     | `/cities`         | Получить все города |
+| GET     | `/cities/{id}`    | Получить город по ID |
+| DELETE  | `/cities/{id}`    | Удалить город |
+| POST    | `/cities/nearest` | Найти ближайшие города |
+| GET     | `/health`         | Проверка здоровья |
+| GET     | `/stats`          | Статистика хранилища |
