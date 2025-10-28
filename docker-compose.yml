@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: cities_db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  city-api:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${PORT}:8000"
+    environment:
+      - HOST=${HOST}
+      - PORT=${PORT}
+      - RELOAD=${RELOAD}
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${POSTGRES_PORT}/${POSTGRES_DB}
+      - GEOCODING_BASE_URL=https://nominatim.openstreetmap.org/search
+      - GEOCODING_USER_AGENT=CityAPI-Docker/1.0
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=${POSTGRES_PORT}
+    volumes:
+      - ./app:/app/app
+      - ./alembic:/app/alembic
+    
+    restart: unless-stopped
+    
+volumes:
+  postgres_data:
